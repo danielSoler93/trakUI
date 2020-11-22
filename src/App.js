@@ -1,8 +1,15 @@
 import React from 'react';
-import TopBar from './components/top_bar';
+import Drawer from './components/side_bar';
 import { MuiThemeProvider, createMuiTheme, responsiveFontSizes } from '@material-ui/core/styles';
+import Signin from './components/sign_in';
 import blue from '@material-ui/core/colors/blue';
 import grey from '@material-ui/core/colors/grey';
+import Button from '@material-ui/core/Button';
+import { BrowserRouter } from 'react-router-dom';
+import { Router, Switch, Route, Redirect} from "react-router-dom";
+import MiniDrawer from "./components/side_bar";
+import sign_in from "./components/sign_in";
+
 
 // use default theme
 // const theme = createMuiTheme();
@@ -11,10 +18,10 @@ import grey from '@material-ui/core/colors/grey';
 var theme = createMuiTheme({
   palette: {
     primary: {
-      main: grey[500],
+      main: '#F8F8FF',
     },
     secondary: {
-      main: blue[500],
+      main: '#37727B',
     },
   },
 });
@@ -25,7 +32,20 @@ function App() {
   return (
     <MuiThemeProvider theme={theme}>
     <div className="App">
-        <TopBar  text_menu="Login Page" text_right="logout" color='primary' />
+        <BrowserRouter>
+          <Switch>
+            <Route
+              exact
+              path="/client"
+              component={sign_in} />
+            <Route
+              exact
+              path="/physio"
+              component={sign_in} />
+           <Route path="/pacient" render={(props) => (<MiniDrawer {...props} text_menu={"Panel Principal Paciente"} text_right={"Logout"}/>
+  )}/>
+        </Switch>
+        </BrowserRouter>
     </div>
     </MuiThemeProvider>
   );
