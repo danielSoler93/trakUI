@@ -12,19 +12,17 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import Paper from '@material-ui/core/Paper';
+import Image from 'material-ui-image'
+import axios from 'axios';
+import { Nav } from 'react-bootstrap';
+import { withRouter, useLocation} from 'react-router-dom';
+import {Redirect, useHistory} from 'react-router-dom';
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+
+
+
+
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -33,9 +31,9 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
   },
-  avatar: {
+  logo: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
+    maxWidth: 160,
   },
   form: {
     width: '100%', // Fix IE 11 issue.
@@ -46,28 +44,52 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignIn() {
-  const classes = useStyles();
+function SignIn() {
+     const classes = useStyles();
+     const history = useHistory();
+     let location = useLocation();
+
+function login(e) {
+    e.preventDefault()
+    let request = {
+        username: document.getElementById('username').value,
+        password: document.getElementById('password').value
+    }
+    axios.post('http://localhost:3001/login', request)
+    .then(resp => {
+        if (resp.data == "Success"){
+                if (location.pathname.includes("client")){
+                    history.push("/pacient");
+                } else {
+                    //CAREFUL BRINGS TO SAME
+                    history.push("/physio");
+                }
+
+            }
+        })
+        .catch(err => {
+        console.log(err);
+        })
+    }
+
 
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
+           <img src="/logo.png" alt="logo" className={classes.logo} />
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form} noValidate>
+        <form onSubmit={(e) => login(e)} className={classes.form} Validate>
           <TextField
             variant="outlined"
             margin="normal"
             required
             fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
+            id="username"
+            label="username"
+            name="username"
             autoComplete="email"
             autoFocus
           />
@@ -83,35 +105,38 @@ export default function SignIn() {
             autoComplete="current-password"
           />
           <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
+            control={<Checkbox name="checkedA" required/>}
+            label="Accepta lo terminos y condiciones"
+            //control={<Checkbox value="remember" color="primary" required/>}
+            //label="Accept terms and conditions"
           />
           <Button
             type="submit"
             fullWidth
             variant="contained"
-            color="primary"
+            color="secondary"
             className={classes.submit}
+
           >
             Sign In
           </Button>
           <Grid container>
-            <Grid item xs>
-              <Link href="#" variant="body2">
-                Forgot password?
-              </Link>
+            <Grid item xs >
+                <Typography variant="body2" align="center">
+                    <Link href="#" variant="body2" align="center">
+                        Forgot password?
+                      </Link>
+                 </Typography>
             </Grid>
             <Grid item>
-              <Link href="#" variant="body2">
-                {"Don't have an account? Sign Up"}
-              </Link>
             </Grid>
           </Grid>
         </form>
       </div>
-      <Box mt={8}>
-        <Copyright />
-      </Box>
     </Container>
   );
 }
+
+
+
+export default withRouter(SignIn)
