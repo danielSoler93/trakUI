@@ -20,11 +20,32 @@ import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
 import CommentIcon from '@material-ui/icons/Comment';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import DesktopWindowsIcon from '@material-ui/icons/DesktopWindows';
+import SummaryPanel from './summary_panels'
+import Table from './table'
 
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
   root: {
+    display: 'flex',
+  },
+    summary_root: {
+    marginTop: '50px',
+  },
+    circular_progress: {
+        width: "100%",
+    },
+    paper: {
+    marginTop: 50,
+    height: 200,
+    width: 250,
+  },
+      paper_long: {
+        marginTop: 50,
+        height: 100,
+        width: "80%",
+  },
+    title: {
     flexGrow: 1,
   },
   appBar: {
@@ -42,11 +63,8 @@ const useStyles = makeStyles((theme) => ({
       duration: theme.transitions.duration.enteringScreen,
     }),
   },
-    title: {
-    flexGrow: 1,
-  },
   menuButton: {
-    marginRight: theme.spacing(2),
+    marginRight: 36,
   },
   hide: {
     display: 'none',
@@ -101,11 +119,22 @@ export default function MiniDrawer(props) {
     setOpen(false);
   };
 
+   var menu =  <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            onClick={handleDrawerOpen}
+            edge="start"
+            className={clsx(classes.menuButton, {
+              [classes.hide]: open,
+            })}><MenuIcon />
+          </IconButton>
+
   return (
     <div className={classes.root}>
       <CssBaseline />
       <AppBar
         position="fixed"
+        color='null'
         className={clsx(classes.appBar, {
           [classes.appBarShift]: open,
         })}
@@ -125,7 +154,7 @@ export default function MiniDrawer(props) {
            <Typography variant="h6" className={classes.title}>
             {props.text_menu}
           </Typography>
-             <Button variant="h6" color="inherit">{props.text_right}</Button>
+             <Button variant="h6" href="/client" variant='outlined' color="secondary">{props.text_right}</Button>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -150,14 +179,19 @@ export default function MiniDrawer(props) {
         <List>
           {['Inicio', 'Sesiones', 'Fisioterapeuta'].map((text, index) => (
             <ListItem button key={text}>
-              <ListItemIcon>{index === 0 ?<DesktopWindowsIcon color="secondary"/ >
-              : index === 1 ? <AssignmentIcon color="secondary"/> : <CommentIcon color="secondary"/>}
+              <ListItemIcon>{index === 0 ?<a href="/pacient"><DesktopWindowsIcon color="secondary"/ ></a>
+              : index === 1 ? <a href="/client"><AssignmentIcon color="secondary"/></a> : <a href="/physio"><CommentIcon color="secondary"/></a>}
               </ListItemIcon>
               <ListItemText primary={text} />
             </ListItem>
           ))}
         </List>
       </Drawer>
+       <main className={classes.content}>
+       < SummaryPanel classes={classes}/>
+       < Table />
+        <div className={classes.toolbar} />
+      </main>
     </div>
   );
 }
